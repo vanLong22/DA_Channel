@@ -21,7 +21,7 @@ Dự án phân tích **120,000 giao dịch bán lẻ** trong giai đoạn **2024
 
 ## 📂 Dataset
 
-- **Nguồn:** [Kaggle](https://www.kaggle.com)
+- **Nguồn:** [Kaggle](https://www.kaggle.com/datasets/noopurbhatt/retail-sales-dataset)
 - **Quy mô:** 120,000 bản ghi · 17 cột
 - **Thời gian:** 01/01/2024 – 30/12/2025
 - **Kênh bán hàng:** In-Store · Mobile App · Online
@@ -163,6 +163,6 @@ Dashboard được xây dựng bằng **Power BI** với 3 trang báo cáo:
 
 ---
 
-## 👤 Tác Giả
+## 👤 Liên hệ
 
-[Linkedin](linkedin.com/in/lê-văn-long-57231b325)
+Linkedin: [](linkedin.com/in/lê-văn-long-57231b325)
