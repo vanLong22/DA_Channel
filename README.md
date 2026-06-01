@@ -57,17 +57,6 @@ Dự án phân tích **120,000 giao dịch bán lẻ** trong giai đoạn **2024
 - **Kiểm tra Logic Nghiệp Vụ:** Phát hiện 40 bản ghi vi phạm (discount > 100%, quantity âm, sales_amount bất thường…). Gán flag thay vì xóa để phục vụ kiểm toán.
 - **Xử lý Outliers:** Áp dụng IQR ở cả cấp độ global và context (theo nhóm `sales_channel × customer_segment`). Quyết định giữ nguyên outlier và tạo cột flag để theo dõi.
 
-**Kết quả sau cleaning:**
-
-| Chỉ số | Trước | Sau |
-|--------|-------|-----|
-| Tổng bản ghi phân tích | 120,000 | 119,960 |
-| Missing values | 6 cột | 0 |
-| Duplicate | 0 | 0 |
-| Kiểu `transaction_date` | object | datetime64 |
-
-**Output:** `retail_dataset_cleaned.csv` (có flag) · `retail_dataset_powerbi.csv` (đã lọc flag)
-
 ---
 
 ### 2. Exploratory Data Analysis (EDA)
@@ -88,35 +77,6 @@ Dự án phân tích **120,000 giao dịch bán lẻ** trong giai đoạn **2024
 - **In-Store là kênh giữ chân:** 36% giao dịch từ nhóm Loyal. **Online & Mobile App là kênh thu hút mới:** ~40–41% giao dịch từ nhóm New.
 - **Discount không làm tăng AOV** – đơn có discount thấp hơn đơn không discount ~$32 ở cả ba kênh.
 - Mỗi danh mục sản phẩm có kênh bán phù hợp riêng: *Groceries/Books/Sports* → In-Store; *Clothing/Toys* → Mobile App; *Electronics/Home* → Online.
-
----
-
-## 📊 Kết Quả & Insight Kinh Doanh
-
-### Hiệu suất tổng thể các kênh
-
-| Kênh | Doanh thu | Số đơn | AOV | Discount Rate |
-|------|-----------|--------|-----|---------------|
-| **Online** | $16,655,740 | 43,777 | $380.47 | 39.94% |
-| **In-Store** | $15,933,950 | 41,753 | $381.62 | 40.35% |
-| **Mobile App** | $12,757,340 | 34,430 | $370.53 | 39.75% |
-
-### Phân khúc khách hàng theo kênh
-
-| Phân khúc | In-Store | Mobile App | Online |
-|-----------|----------|------------|--------|
-| **New** | 14.08% | 40.29% | 41.97% |
-| **Loyal** | 36.32% | 13.05% | 14.09% |
-| **Returning** | 29.71% | 22.75% | 21.02% |
-| **VIP** | 19.89% | 23.91% | 22.92% |
-
-### Thế mạnh danh mục sản phẩm theo kênh
-
-| Kênh | Danh mục mạnh nhất |
-|------|--------------------|
-| In-Store | Groceries (56.57%) · Books (49%) · Sports (42.90%) |
-| Mobile App | Clothing (50.82%) · Toys (45.61%) |
-| Online | Home (52.70%) · Electronics (43.93%) |
 
 ### Khuyến nghị hành động chính
 
@@ -165,4 +125,4 @@ Dashboard được xây dựng bằng **Power BI** với 3 trang báo cáo:
 
 ## 👤 Liên hệ
 
-[Linkedin](https://www.linkedin.com/in/l%C3%AA-v%C4%83n-long-57231b325/)
+[Linkedin](https://www.linkedin.com/in/le-van-long-57231b325/)
