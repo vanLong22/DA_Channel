@@ -165,4 +165,4 @@ Dashboard được xây dựng bằng **Power BI** với 3 trang báo cáo:
 
 ## 👤 Liên hệ
 
-Linkedin: [](linkedin.com/in/lê-văn-long-57231b325)
+Linkedin: [Le Van Long](linkedin.com/in/lê-văn-long-57231b325)
