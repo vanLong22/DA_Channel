@@ -1,128 +1,58 @@
-# 🛍️ Phân Tích Hành Vi Mua Hàng Đa Kênh
+# Phân tích Hành vi Mua hàng Đa kênh (Omnichannel Retail Analytics)
 
-> **So sánh hiệu quả kinh doanh giữa kênh In-Store, Mobile App và Online**
+## 1. Tổng quan Dự án (Project Overview)
+Dự án tập trung vào việc xử lý và phân tích dữ liệu kinh doanh đa kênh của **Công ty X** – một chuỗi bán lẻ thời trang, phong cách sống và công nghệ hàng đầu tại Việt Nam. Nhằm thích ứng với xu hướng hiện đại, công ty đã triển khai mô hình Bán hàng đa kênh (Omnichannel) qua 3 kênh chính: **Hệ thống cửa hàng vật lý (In-Store)**, **Ứng dụng di động (Mobile App)**, và **Trang thương mại điện tử (Online)**.
 
----
+Sau 2 năm vận hành (2024–2025) với cùng một chính sách phân bổ thử nghiệm, dự án hiện bước vào giai đoạn **Tối ưu hóa chi phí và Chuyên môn hóa kênh bán**. Mục tiêu cốt lõi của nghiên cứu này là cung cấp các góc nhìn chuyên sâu dựa trên dữ liệu để giúp Ban giám đốc tái cấu trúc ngân sách marketing, định hình lại vai trò chiến lược của từng kênh nhằm chuẩn bị cho đà tăng trưởng tiếp theo.
 
-## 📌 Tóm Tắt Dự Án
+## 2. Bài toán Kinh doanh (Business Problems)
+Nghiên cứu này tiến hành phân tích sâu hành vi mua sắm trên tập dữ liệu gồm **120,000 giao dịch** để tìm câu trả lời thỏa đáng cho bốn bài toán kinh doanh lớn[cite: 5]:
+*   Kênh bán hàng nào đang mang lại hiệu quả cao nhất về doanh thu và giá trị trung bình trên một đơn hàng (AOV)?[cite: 5]
+*   Đặc trưng phân khúc khách hàng (*New, Loyal, Returning, VIP*) gắn liền với kênh mua sắm nào?[cite: 5]
+*   Ngành hàng/Danh mục sản phẩm nào tối ưu hiệu suất nhất khi phân phối trên từng kênh cụ thể?[cite: 5]
+*   Tác động thực tế của chính sách chiết khấu (Discount) lên giá trị đơn hàng như thế nào?[cite: 5]
 
-Công ty X là doanh nghiệp bán lẻ hoạt động đồng thời trên ba kênh: cửa hàng truyền thống (**In-Store**), ứng dụng di động (**Mobile App**) và website thương mại điện tử (**Online**). Ban lãnh đạo muốn hiểu rõ sự khác biệt về hiệu quả giữa các kênh để đưa ra quyết định phân bổ nguồn lực và xây dựng chiến lược bán hàng phù hợp.
+## 3. Dữ liệu & Quy trình Xử lý (Data & Pipeline)
+*   **Dữ liệu đầu vào:** Tập dữ liệu gốc gồm 120,000 bản ghi chứa thông tin chi tiết về mã giao dịch, ngày mua, phân khúc khách hàng, danh mục sản phẩm, số lượng, giá bán, tỷ lệ giảm giá, doanh thu, và kênh phân phối[cite: 5].
+*   **Quy trình Xử lý dữ liệu (`data_cleaning.ipynb`):**
+    *   *Chuẩn hóa định dạng:* Đồng bộ hóa cột ngày tháng từ hai định dạng hỗn hợp (`YYYY-MM-DD` và `DD/MM/YYYY`) về kiểu `datetime64` đồng nhất; chuyển đổi dữ liệu dạng chữ sang kiểu dữ liệu danh mục (`category`)[cite: 5].
+    *   *Xử lý giá trị thiếu:* Phát hiện dữ liệu thiếu hoàn toàn ngẫu nhiên (MCAR) ở các trường thông tin phụ và tiến hành điền giá trị `Unknown` hoặc giá trị xuất hiện phổ biến nhất (`mode`)[cite: 5]. Riêng cột doanh thu (`sales_amount`) thiếu được tính toán lại chính xác dựa trên công thức nghiệp vụ[cite: 5].
+    *   *Kiểm tra logic nghiệp vụ:* Phát hiện và xử lý các bản ghi lỗi hệ thống (ví dụ: tỷ lệ giảm giá > 100%, đơn giá hoặc số lượng âm, doanh thu thực tế bị phóng đại 100 lần do lỗi dấu thập phân)[cite: 5]. Tổng cộng 40 bản ghi lỗi nghiêm trọng đã được gán flag và loại bỏ trước khi đưa vào phân tích, giữ lại 119,960 bản ghi sạch[cite: 5].
+    *   *Xử lý giá trị ngoại lai (Outlier):* Sử dụng phương pháp khoảng liên phân vị (IQR) để gắn cờ theo dõi các đơn hàng có giá trị cao hoặc số lượng lớn đột biến mà không xóa bỏ, đảm bảo tính toàn vẹn của dữ liệu[cite: 5].
 
-Dự án phân tích **120,000 giao dịch bán lẻ** trong giai đoạn **2024–2025**, nhằm trả lời bốn câu hỏi kinh doanh:
+## 4. Khám phá Chính & Kiểm định Thống kê (Key Insights)
+Sau khi áp dụng thống kê mô tả phối hợp với kỹ thuật đào sâu nguyên nhân (Drill-down why-why), dự án phát hiện các insight chiến lược sau[cite: 5]:
 
-| # | Câu hỏi |
-|---|---------|
-| 1 | Kênh nào tạo ra doanh thu và giá trị đơn hàng (AOV) cao nhất? |
-| 2 | Kênh nào phù hợp với từng phân khúc khách hàng (New, Loyal, Returning, VIP)? |
-| 3 | Chính sách discount có thực sự làm tăng giá trị đơn hàng không? |
-| 4 | Danh mục sản phẩm nào nên bán trên kênh nào? |
+### Hiệu suất Doanh thu & Đơn hàng theo kênh[cite: 5]
+*   **Online** đạt doanh thu cao nhất (**$16,655,740**) nhờ sở hữu số lượng giao dịch vượt trội (**43,777 đơn**), mặc dù giá trị trung bình đơn hàng ($380.47) thấp hơn In-Store[cite: 5].
+*   **In-Store** đứng thứ hai về doanh thu ($15,933,950) nhưng dẫn đầu về giá trị trung bình trên một đơn hàng (AOV đạt **$381.62**)[cite: 5].
+*   **Mobile App** cho thấy hiệu suất kém nhất ở cả tổng doanh thu ($12,757,340) lẫn AOV ($370.53)[cite: 5].
 
----
+### Đặc trưng Phân khúc Khách hàng & Ngành hàng[cite: 5]
+*   **Kênh Online & Mobile App** đóng vai trò là phễu thu hút khách hàng mới (*New Customers*), chiếm lần lượt 41.97% và 40.29% cơ cấu doanh thu của kênh[cite: 5]. Online bán chạy nhất đối với ngành hàng **Đồ gia dụng (Home)** và **Thiết bị điện tử (Electronics)**[cite: 5].
+*   **Kênh In-Store** đóng vai trò giữ chân và duy trì lòng trung thành của khách hàng (*Loyal & Returning*) khi nhóm này đóng góp tới 65.9% lượng đơn hàng[cite: 5]. Ngành hàng chủ lực thúc đẩy hành vi mua lặp lại tại cửa hàng là **Thực phẩm/Hàng tiêu dùng (Groceries)** và **Sách (Books)**[cite: 5].
 
-## 📂 Dataset
+### Các kiểm định thống kê sử dụng (`EDA.ipynb`)[cite: 5]
+*   **Kiểm định Kruskal-Wallis H & Mann-Whitney U:** Xác nhận sự khác biệt về số lượng đơn hàng theo tháng của Mobile App thấp hơn Online và In-Store một cách rõ rệt, có ý nghĩa thống kê[cite: 5].
+*   **Kiểm định Chi-square (kèm Cramér's V):** Xác nhận mối quan hệ phụ thuộc chặt chẽ giữa phân khúc khách hàng và kênh lựa chọn mua sắm[cite: 5].
 
-- **Nguồn:** [Kaggle](https://www.kaggle.com/datasets/noopurbhatt/retail-sales-dataset)
-- **Quy mô:** 120,000 bản ghi · 17 cột
-- **Thời gian:** 01/01/2024 – 30/12/2025
-- **Kênh bán hàng:** In-Store · Mobile App · Online
-- **Phân khúc khách hàng:** New · Loyal · Returning · VIP
-- **Danh mục sản phẩm:** Beauty · Books · Clothing · Electronics · Groceries · Home · Sports · Toys
+## 5. Khuyến nghị Hành động & Tác động Kỳ vọng
+*   **Khuyến nghị 1 (Tối ưu Mobile App):** Triển khai chương trình cross-selling (gợi ý mua thêm) ngay tại bước thanh toán cho nhóm khách hàng mới khi mua các sản phẩm Thời trang, Đồ chơi, Thiết bị điện tử[cite: 5]. 
+    *   *Mục tiêu:* Thúc đẩy tăng trưởng 15% - 20% số lượng đơn hàng hằng tháng và kéo AOV của Mobile App tăng 10% - 15%[cite: 5].
+*   **Khuyến nghị 2 (Mở rộng Kênh Online):** Duy trì thế mạnh thu hút khách hàng mới của các ngành hàng Thiết bị điện tử, Đồ gia dụng, kết hợp bổ sung chuỗi chiến dịch chăm sóc tự động sau mua (Email marketing, nhắc lịch mua lại)[cite: 5].
+    *   *Mục tiêu:* Gia tăng tỷ lệ giữ chân và chuyển đổi khách hàng mới thành khách hàng quay lại tăng từ 5% - 10% sau 6 tháng[cite: 5].
+*   **Khuyến nghị 3 (Duy trì vị thế In-Store):** Ưu tiên diện tích trưng bày và tối ưu nguồn hàng tồn kho cho hai nhóm mặt hàng có nhu cầu mua lặp lại cao là Thực phẩm và Sách, áp dụng các chính sách tích điểm đặc quyền dành riêng cho khách thành viên trực tiếp[cite: 5].
+    *   *Mục tiêu:* Giữ vững tỷ trọng đơn hàng của nhóm khách hàng trung thành ở mức tối thiểu 65.9% và tăng tần suất mua lặp lại của họ[cite: 5].
 
-**Các cột chính được dùng trong phân tích:**
-
-| Cột | Ý nghĩa |
-|-----|---------|
-| `transaction_id` | Mã giao dịch duy nhất |
-| `transaction_date` | Ngày thực hiện giao dịch |
-| `sales_channel` | Kênh bán hàng |
-| `customer_segment` | Phân khúc khách hàng |
-| `category` | Danh mục sản phẩm |
-| `quantity` | Số lượng sản phẩm |
-| `unit_price` | Đơn giá (USD) |
-| `discount_pct` | Tỷ lệ giảm giá (%) |
-| `sales_amount` | Doanh thu giao dịch (USD) |
-
----
-
-## 🔧 Các Bước Thực Hiện (Methodology)
-
-### 1. Data Cleaning
-
-**Mục tiêu:** Chuẩn hóa dữ liệu thô trước khi phân tích.
-
-**Các bước xử lý:**
-
-- **Chuẩn hóa định dạng:** Phát hiện và xử lý hai định dạng ngày hỗn lẫn (`YYYY-MM-DD` và `DD/MM/YYYY`), chuẩn hóa về `datetime64`. Hợp nhất hai giá trị trùng nghĩa `Gift Card` / `Giftcard`.
-- **Xử lý Missing Values:** Áp dụng kiểm định chi-square và so sánh trung bình để xác định loại missing (MCAR). Xử lý 6 cột có giá trị thiếu bằng các phương pháp phù hợp (điền `Unknown`, điền mode, tính lại theo công thức).
-- **Kiểm tra Logic Nghiệp Vụ:** Phát hiện 40 bản ghi vi phạm (discount > 100%, quantity âm, sales_amount bất thường…). Gán flag thay vì xóa để phục vụ kiểm toán.
-- **Xử lý Outliers:** Áp dụng IQR ở cả cấp độ global và context (theo nhóm `sales_channel × customer_segment`). Quyết định giữ nguyên outlier và tạo cột flag để theo dõi.
-
----
-
-### 2. Exploratory Data Analysis (EDA)
-
-**Công cụ:** Python · Pandas · Matplotlib · Seaborn
-
-**Các phân tích thực hiện:**
-
-- Tổng doanh thu & AOV theo kênh bán hàng
-- Xu hướng doanh thu theo tháng (2024–2025)
-- Heatmap doanh thu theo phân khúc khách hàng và kênh
-- AOV có discount và không discount theo kênh
-- Tỷ trọng doanh thu từng danh mục sản phẩm theo kênh
-
-**Insights nổi bật từ EDA:**
-
-- **Online dẫn đầu doanh thu** ($16.66M), nhưng **In-Store có AOV cao nhất** ($381.62) → mỗi kênh có thế mạnh riêng.
-- **In-Store là kênh giữ chân:** 36% giao dịch từ nhóm Loyal. **Online & Mobile App là kênh thu hút mới:** ~40–41% giao dịch từ nhóm New.
-- **Discount không làm tăng AOV** – đơn có discount thấp hơn đơn không discount ~$32 ở cả ba kênh.
-- Mỗi danh mục sản phẩm có kênh bán phù hợp riêng: *Groceries/Books/Sports* → In-Store; *Clothing/Toys* → Mobile App; *Electronics/Home* → Online.
-
-### Khuyến nghị hành động chính
-
-1. **Giảm tỷ lệ đơn có discount từ ~40% xuống ~25%** — discount đang làm giảm AOV ~$32/đơn mà không tạo thêm giá trị.
-2. **Ưu tiên đầu tư vào kênh Online** — dẫn đầu doanh thu và thu hút khách hàng mới hiệu quả nhất.
-3. **Phân bổ ngân sách marketing đúng vai trò từng kênh** — không quảng cáo kéo khách mới cho In-Store.
-4. **Phân bổ tồn kho theo thế mạnh danh mục** — mỗi kênh tập trung vào nhóm sản phẩm phù hợp.
-5. **Chuẩn bị sớm cho mùa cao điểm Quý 4** — doanh thu tăng mạnh vào tháng 9–12 cả hai năm.
-
----
-
-## 📈 Dashboard
-
-Dashboard được xây dựng bằng **Power BI** với 3 trang báo cáo:
-
-| Trang | Nội dung |
-|-------|---------|
-| **Tổng quan hiệu suất** | Doanh thu, AOV, số đơn, discount theo kênh và theo thời gian |
-| **Phân khúc khách hàng** | Heatmap doanh thu, tỷ lệ giao dịch và AOV theo phân khúc × kênh |
-| **Khuyến mãi & Danh mục** | AOV có/không discount; tỷ trọng doanh thu theo sản phẩm và kênh |
-
-🔗 **[Xem Dashboard trực tuyến](https://app.powerbi.com/groups/me/reports/23f05379-91b1-44eb-a548-51f47e92a56e/0f07b47e6a0235f13e70?experience=power-bi)** 
-
----
-
-## 🗂️ Cấu Trúc File
-
-```
+## 6. Cấu trúc Thư mục Dự án (Project Structure)
+```text
 ├── data/
-│   ├── raw/
-│   │        ├── retail_sales_dataset.csv         # Dữ liệu thô gốc (120,000 bản ghi)
-│   ├── processed
-│   │        ├── retail_dataset_cleaned.csv       # Dữ liệu đã làm sạch (có flag)
-│   │        └── retail_dataset_powerbi.csv       # Dữ liệu dùng cho Power BI (đã lọc flag)
+│   ├── retail_sales_dataset.csv     # Dữ liệu gốc chưa làm sạch (120,000 dòng)
+│   ├── retail_dataset_cleaned.csv   # Dữ liệu sau xử lý chứa đầy đủ flag
+│   └── retail_dataset_eda.csv       # Dữ liệu làm sạch hoàn toàn dùng cho EDA & Power BI
 ├── notebooks/
-│   ├── data_cleaning.ipynb              # Toàn bộ quy trình làm sạch dữ liệu
-│   └── EDA.ipynb                        # Tìm insight 
-├── BaoCao.pbix                      
-├── BaoCao.docx                      
-└── README.md
-```
-
----
-
----
-
-## 👤 Liên hệ
-
-[Linkedin](https://www.linkedin.com/in/le-van-long-57231b325/)
+│   ├── data_cleaning.ipynb          # Notebook thực hiện toàn bộ quy trình làm sạch dữ liệu
+│   └── EDA.ipynb                    # Notebook phân tích khám phá, kiểm định thống kê chuyên sâu
+├── dashboards/
+│   └── omnichannel_analytics.pbix   # File thiết kế báo cáo dashboard trên Power BI
+└── README.md                        # Tài liệu hướng dẫn dự án
