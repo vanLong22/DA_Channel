@@ -46,7 +46,7 @@ Sau khi áp dụng thống kê mô tả phối hợp với kỹ thuật đào s�
     *   *Mục tiêu:* Giữ vững tỷ trọng đơn hàng của nhóm khách hàng trung thành ở mức tối thiểu 65.9% và tăng tần suất mua lặp lại của họ.
       
 ## 6. DashBoard 
-*    **[Xem Dashboard trực tuyến](https://app.powerbi.com/links/Tnx_b9SZHw?ctid=e94fbe89-41e0-4857-b292-cfd8b9e613f0&pbi_source=linkShare)** 
+*    **[Xem Dashboard trực tuyến](https://app.powerbi.com/links/Tnx_b9SZHw?ctid=e94fbe89-41e0-4857-b292-cfd8b9e613f0&pbi_source=linkShare&bookmarkGuid=4f3f38cd-7441-4f8b-ab4f-65595b86cec2)** 
 
 ## 7. Cấu trúc Thư mục Dự án
 ```text
